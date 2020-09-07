@@ -1,0 +1,77 @@
+version: '3.8'
+
+x-common-master: &common-master
+  hostname: salt
+  command: salt-master -linfo
+  volumes:
+    - ./docker_data/etc/master:/etc/salt/master:ro
+    - ./docker_data/states:/srv/salt/states:ro
+    - ./docker_data/pillars:/srv/salt/pillars:ro
+
+x-common-minion: &common-minion
+  hostname: minion
+  command: salt-minion -linfo
+  volumes:
+    - ./docker_data/etc/minion:/etc/salt/minion:ro
+
+
+networks:
+  stretch: {}
+  xenial: {}
+  buster: {}
+
+services:
+  stretch-master:
+    <<: *common-master
+    image: local/salt:debian-stretch
+    build:
+      args:
+        - IMAGE=debian:stretch-slim
+      dockerfile: ./Dockerfile
+      context: .
+    networks:
+      stretch:
+        aliases:
+          - salt
+  stretch-minion:
+    <<: *common-minion
+    image: local/salt:debian-stretch
+    networks:
+      stretch:
+
+  buster-master:
+    <<: *common-master
+    image: local/salt:debian-buster
+    build:
+      args:
+        - IMAGE=debian:buster-slim
+      dockerfile: ./Dockerfile
+      context: .
+    networks:
+      buster:
+        aliases:
+          - salt
+  buster-minion:
+    <<: *common-minion
+    image: local/salt:debian-buster
+    networks:
+      buster:
+
+
+  xenial-master:
+    <<: *common-master
+    image: local/salt:ubuntu-xenial
+    build:
+      args:
+        - IMAGE=ubuntu:xenial
+      dockerfile: ./Dockerfile
+      context: .
+    networks:
+      xenial:
+        aliases:
+          - salt
+  xenial-minion:
+    <<: *common-minion
+    image: local/salt:ubuntu-xenial
+    networks:
+      xenial:

@@ -1,0 +1,2 @@
+master: salt
+minion_id_caching: False

@@ -1,0 +1,6 @@
+# -*- mode: jinja2 -*-
+{% set dummy = pillar.get('dummy', {}) %}
+dummy:
+  {%- for k,v in dummy.items() %}
+  {{ k }}: "{{ v }}"
+  {%- endfor %}
