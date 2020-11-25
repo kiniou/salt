@@ -1101,7 +1101,7 @@ def alter_db(name, character_set=None, collate=None, **connection_args):
     cur = dbc.cursor()
     existing = db_get(name, **connection_args)
     qry = "ALTER DATABASE `{}` CHARACTER SET {} COLLATE {};".format(
-        name.replace("%", r"\%").replace("_", r"\_"),
+        name,
         character_set or existing.get("character_set"),
         collate or existing.get("collate"),
     )
